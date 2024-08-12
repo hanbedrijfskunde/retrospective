@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Retrospective Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            color: #ccc;
+            font-size: 2rem;
+            padding: 0;
+            cursor: pointer;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f5c518;
+        }
+        .description {
+            font-size: 0.875rem;
+            color: #555;
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-xl mx-auto bg-white shadow-md rounded p-6">
+        <h1 class="text-2xl font-bold mb-4">Workshop Retrospective</h1>
+        <form id="feedbackForm" class="mb-6">
+            <div class="mb-4">
+                <label for="voornaam" class="block font-medium text-gray-700">Voornaam</label>
+                <input type="text" id="voornaam" name="voornaam" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-medium text-gray-700">Informatie</label>
+                <div class="description italic">Hoe waardevol vond je de opgedane kennis?</div>
+                <div class="star-rating">
+                    <input type="radio" id="informatie5" name="informatie" value="5" required><label for="informatie5">★</label>
+                    <input type="radio" id="informatie4" name="informatie" value="4"><label for="informatie4">★</label>
+                    <input type="radio" id="informatie3" name="informatie" value="3"><label for="informatie3">★</label>
+                    <input type="radio" id="informatie2" name="informatie" value="2"><label for="informatie2">★</label>
+                    <input type="radio" id="informatie1" name="informatie" value="1"><label for="informatie1">★</label>
+                    <input type="radio" id="informatie0" name="informatie" value="0" checked required style="display: none;">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-medium text-gray-700">Interactie</label>
+                <div class="description italic">Hoeveel ruimte was er om zelf met de materie aan de slag te gaan?</div>
+                <div class="star-rating">                 
+                    <input type="radio" id="interactie5" name="interactie" value="5"><label for="interactie5">★</label>
+                    <input type="radio" id="interactie4" name="interactie" value="4"><label for="interactie4">★</label>
+                    <input type="radio" id="interactie3" name="interactie" value="3"><label for="interactie3">★</label>
+                    <input type="radio" id="interactie2" name="interactie" value="2"><label for="interactie2">★</label>
+                    <input type="radio" id="interactie1" name="interactie" value="1"><label for="interactie1">★</label>
+                    <input type="radio" id="interactie0" name="interactie" value="0" checked required style="display: none;">  
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-medium text-gray-700">Inspiratie</label>
+                <div class="description italic">In hoeverre heeft de sessie je nieuwe inzichten en/of ideeën gegeven?</div>
+                <div class="star-rating">
+                    <input type="radio" id="inspiratie5" name="inspiratie" value="5"><label for="inspiratie5">★</label>
+                    <input type="radio" id="inspiratie4" name="inspiratie" value="4"><label for="inspiratie4">★</label>
+                    <input type="radio" id="inspiratie3" name="inspiratie" value="3"><label for="inspiratie3">★</label>
+                    <input type="radio" id="inspiratie2" name="inspiratie" value="2"><label for="inspiratie2">★</label>
+                    <input type="radio" id="inspiratie1" name="inspiratie" value="1"><label for="inspiratie1">★</label>
+                    <input type="radio" id="inspiratie0" name="inspiratie" value="0" checked required style="display: none;">
+                </div>                
+            </div>
+
+            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Verstuur</button>
+        </form>
+
+        <canvas id="feedbackChart" width="400" height="400"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
