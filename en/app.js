@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Fetch data from the Baserow database and populate the chart
-    const databaseUrl = 'https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true';
+    const databaseUrl = `https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true&filter__field_2494180__contains=${workshopName}`;
     const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo'; // Replace with your actual token
 
     try {
