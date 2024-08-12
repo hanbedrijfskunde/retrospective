@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     position: 'bottom',
                     title: {
                         display: true,
-                        text: 'Informatie'
+                        text: 'Information'
                     },
                     min: 0,
                     max: 5,
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 y: {
                     title: {
                         display: true,
-                        text: 'Interactie'
+                        text: 'Interaction'
                     },
                     min: 0,
                     max: 5,
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         label: function(context) {
                             const { originalX, originalY, originalR } = context.raw;
                             const voornaam = context.raw.voornaam;
-                            return `${voornaam}: Informatie=${originalX}, Interactie=${originalY}, Inspiratie=${originalR}`;
+                            return `${voornaam}: Information=${originalX}, Interaction=${originalY}, Inspiration=${originalR}`;
                         }
                     }
                 }
