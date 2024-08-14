@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const databaseUrl = `https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true&filter__field_2494180__contains=${workshopName}`;
     console.log(databaseUrl)
     const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo';  // Replace with your actual token
-    const baserowTableUrl = `https://api.baserow.io/api/database/rows/table/338807/?user_field_names=true&filter__field_2499943__contains=${workshopName}`;
+    const baserowTableUrl = 'https://api.baserow.io/api/database/rows/table/338807/?user_field_names=true';
 
     // Fetch and populate the network graph with existing name pairs from the Baserow table
     async function fetchAndPopulatePairs() {
