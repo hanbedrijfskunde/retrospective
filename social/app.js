@@ -128,8 +128,18 @@ document.addEventListener("DOMContentLoaded", function() {
             nodes.add({ id: pair.other, label: pair.other });
         }
 
-        // Add an edge between the two nodes
-        edges.add({ from: pair.user, to: pair.other });
+        // Check if an edge already exists between the two nodes
+        const existingEdge = edges.get({
+            filter: (edge) => (
+                (edge.from === pair.user && edge.to === pair.other) ||
+                (edge.from === pair.other && edge.to === pair.user)
+            )
+        });
+
+        // If no edge exists, add a new one
+        if (existingEdge.length === 0) {
+            edges.add({ from: pair.user, to: pair.other });
+        }
     }
 
     // Write the name pair to the Baserow table
