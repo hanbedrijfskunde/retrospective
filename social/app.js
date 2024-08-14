@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const workshopName = urlParams.get('workshop') || 'Workshop';
 
+    // Update the page title with the workshop name
+    document.title = `${workshopName} Social Graph`;
+
+    // Update the title on the page
+    document.querySelector('h1').textContent = `${workshopName} Social Graph`;
+
     // Vis.js Data
     const nodes = new vis.DataSet([]);
     const edges = new vis.DataSet([]);
