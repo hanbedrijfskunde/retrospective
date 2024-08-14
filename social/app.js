@@ -16,9 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Define constants for the API URL and token
     const databaseUrl = `https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true&filter__field_2494180__contains=${workshopName}`;
-    console.log(databaseUrl)
-    const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo';  // Replace with your actual token
+    const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo';
     const baserowTableUrl = `https://api.baserow.io/api/database/rows/table/338807/?user_field_names=true&filter__field_2499943__contains=${workshopName}`;
+
+    let selectedUserName = null;
 
     // Fetch and populate the network graph with existing name pairs from the Baserow table
     async function fetchAndPopulatePairs() {
@@ -66,34 +67,35 @@ document.addEventListener("DOMContentLoaded", function() {
             }
     
             const data = await response.json();
-    
-            // Log the entire API response to see what's being returned
-            console.log('API Response Data:', data);
+            console.log(data.results)
     
             // Ensure 'results' exists in the response and has content
             if (data.results && data.results.length > 0) {
                 const names = data.results.map(record => record.voornaam);
                 const uniqueNames = [...new Set(names)];
+                console.log(uniqueNames)
     
-                // Log uniqueNames to verify names are being retrieved
-                console.log('Unique Names:', uniqueNames);
-    
+                // Create a single set of buttons for name selection
                 uniqueNames.forEach(name => {
                     const button = document.createElement('button');
                     button.textContent = name;
-                    button.className = 'name-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition';
+                    button.className = 'name-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-full';
                     button.addEventListener('click', function() {
-                        const userName = document.getElementById('userName').value;
-                        if (userName) {
-                            savePair(userName, name);
-                            button.style.display = 'none'; // Hide the button after it's clicked
+                        if (!selectedUserName) {
+                            // The first click sets the user's name
+                            selectedUserName = name;
+                            alert(`You selected ${selectedUserName} as your name.`);
                         } else {
-                            alert("Please enter your name.");
+                            // Subsequent clicks are pairing selections
+                            savePair(selectedUserName, name);
                         }
+                        // Disable the clicked button
+                        button.disabled = true;
+                        button.className = 'bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed';
                     });
                     nameButtonsContainer.appendChild(button);
                 });
-    
+
                 if (uniqueNames.length === 0) {
                     console.log('No unique names found to generate buttons.');
                 }
