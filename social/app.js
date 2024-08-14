@@ -114,17 +114,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Save the name pair, display it, update the graph, and write to Baserow
     function savePair(user, other) {
         const pair = { user, other };
-        displayPair(pair);
         updateGraph(pair);
         writePairToBaserow(pair);
-    }
-
-    // Display the name pair
-    function displayPair(pair) {
-        const pairElement = document.createElement('div');
-        pairElement.textContent = `Pair: { user: "${pair.user}", other: "${pair.other}" }`;
-        pairElement.className = "bg-gray-200 p-3 rounded";
-        pairingList.appendChild(pairElement);
     }
 
     // Update the network graph with the new pair
