@@ -3,31 +3,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const nameButtonsContainer = document.getElementById('nameButtonsContainer');
     const networkContainer = document.getElementById('network');
 
-    // Haal de workshopnaam op uit de URL-queryparameters
+    // Extract the workshop name from the URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
     const workshopName = urlParams.get('workshop') || 'Workshop';
 
-    // Werk de paginatitel bij met de workshopnaam
-    document.title = `${workshopName} Sociale Grafiek`;
+    // Update the page title with the workshop name
+    document.title = `${workshopName} Social Graph`;
 
-    // Werk de titel op de pagina bij
-    document.querySelector('h1').textContent = `${workshopName} Sociale Grafiek`;    
+    // Update the title on the page
+    document.querySelector('h1').textContent = `${workshopName} Social Graph`;    
 
-    // Vis.js Gegevens
+    // Vis.js Data
     const nodes = new vis.DataSet([]);
     const edges = new vis.DataSet([]);
 
-    // Maak een netwerk
+    // Create a network
     const network = new vis.Network(networkContainer, { nodes, edges }, {});
 
-    // Definieer constanten voor de API-URL en token
+    // Define constants for the API URL and token
     const databaseUrl = `https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true&filter__field_2494180__contains=${encodeURIComponent(workshopName)}`;
     const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo';
     const baserowTableUrl = `https://api.baserow.io/api/database/rows/table/338807/?user_field_names=true&filter__field_2499943__contains=${workshopName}`;
 
     let selectedUserName = null;
 
-    // Haal en vul de netwerkdiagram met bestaande naamparen uit de Baserow-tabel
+    // Fetch and populate the network graph with existing name pairs from the Baserow table
     async function fetchAndPopulatePairs() {
         try {
             const response = await fetch(baserowTableUrl, {
@@ -38,13 +38,13 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             if (!response.ok) {
-                throw new Error(`Fout: ${response.status} ${response.statusText}`);
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
             const pairs = data.results;
 
-            // Vul de netwerkdiagram met bestaande paren
+            // Populate the network graph with existing pairs
             pairs.forEach(pair => {
                 updateGraph({
                     user: pair.user,
@@ -53,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
         } catch (error) {
-            console.error('Fout bij het ophalen van naamparen van Baserow:', error);
-            alert('Het laden van bestaande naamparen is mislukt. Probeer het later opnieuw.');
+            console.error('Error fetching name pairs from Baserow:', error);
+            alert('Failed to load existing name pairs. Please try again later.');
         }
     }
 
-    // Haal namen op van de opgegeven API met try-catch voor foutafhandeling
+    // Fetch names from the provided API with try-catch for error handling
     async function fetchNames() {
         try {
             const response = await fetch(databaseUrl, {
@@ -69,37 +69,37 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     
             if (!response.ok) {
-                throw new Error(`Fout: ${response.status} ${response.statusText}`);
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
     
             const data = await response.json();
     
-            // Zorg ervoor dat 'results' bestaat in de respons en inhoud heeft
+            // Ensure 'results' exists in the response and has content
             if (data.results && data.results.length > 0) {
                 const names = data.results.map(record => record.voornaam);
                 const uniqueNames = [...new Set(names)];
     
-                // Maak een enkele set knoppen voor naamselectie
+                // Create a single set of buttons for name selection
                 uniqueNames.forEach(name => {
                     const button = document.createElement('button');
                     button.textContent = name;
                     button.className = 'name-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-full';
                     button.addEventListener('click', function() {
                         if (!selectedUserName) {
-                            // De eerste klik stelt de naam van de gebruiker in
+                            // The first click sets the user's name
                             selectedUserName = name;
                             instructionsDiv.innerHTML = `
-                                <p class="font-bold">Geweldig!</p>
-                                <p>Klik nu op de namen van de personen waarmee je hebt samengewerkt.</p>
+                                <p class="font-bold">Great!</p>
+                                <p>Now click on the names of the persons you've interacted with.</p>
                             `;
-                            // Verander de kleur van de eerste aangeklikte knop naar 'HotPink'
+                            // Change the color of the first clicked button to 'HotPink'
                             button.style.backgroundColor = 'deeppink';
                             button.style.color = 'white';
                         } else {
-                            // Latere klikken zijn koppelingsselecties
+                            // Subsequent clicks are pairing selections
                             savePair(selectedUserName, name);
                         }
-                        // Schakel de aangeklikte knop uit
+                        // Disable the clicked button
                         button.disabled = true;
                         button.className = 'bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed';
                     });
@@ -107,30 +107,30 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
 
                 if (uniqueNames.length === 0) {
-                    console.log('Geen unieke namen gevonden om knoppen te genereren.');
+                    console.log('No unique names found to generate buttons.');
                 }
     
             } else {
-                console.log('Geen resultaten gevonden in de API-respons.');
+                console.log('No results found in API response.');
             }
     
         } catch (error) {
-            console.error('Fout bij het ophalen van namen:', error);
-            alert('Het laden van namen is mislukt. Probeer het later opnieuw.');
+            console.error('Error fetching names:', error);
+            alert('Failed to load names. Please try again later.');
         }
     }
     
 
-    // Sla het naamkoppel op, werk de grafiek bij en schrijf naar Baserow
+    // Save the name pair, update the graph, and write to Baserow
     function savePair(user, other) {
         const pair = { user, other };
         updateGraph(pair);
         writePairToBaserow(pair);
     }
 
-    // Werk de netwerkdiagram bij met het nieuwe paar
+    // Update the network graph with the new pair
     function updateGraph(pair) {
-        // Voeg knooppunten toe als ze nog niet bestaan
+        // Add nodes if they don't already exist
         if (!nodes.get(pair.user)) {
             nodes.add({ id: pair.user, label: pair.user });
         }
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
             nodes.add({ id: pair.other, label: pair.other });
         }
 
-        // Controleer of er al een rand bestaat tussen de twee knooppunten
+        // Check if an edge already exists between the two nodes
         const existingEdge = edges.get({
             filter: (edge) => (
                 (edge.from === pair.user && edge.to === pair.other) ||
@@ -146,15 +146,15 @@ document.addEventListener("DOMContentLoaded", function() {
             )
         });
 
-        // Als er geen rand bestaat, voeg een nieuwe toe
+        // If no edge exists, add a new one
         if (existingEdge.length === 0) {
             edges.add({ from: pair.user, to: pair.other });
         }
     }
 
-    // Schrijf het naamkoppel naar de Baserow-tabel
+    // Write the name pair to the Baserow table
     async function writePairToBaserow(pair) {
-        // Verstuur gegevens naar de Baserow-database
+        // Send data to the Baserow database
         try {
             const response = await fetch(baserowTableUrl, {
                 method: 'POST',
@@ -163,26 +163,26 @@ document.addEventListener("DOMContentLoaded", function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    course: workshopName, // Aannemende dat "course" de juiste veldnaam is voor de workshopnaam
-                    user: pair.user, // Stuur de daadwerkelijke gebruikersnaam
-                    other: pair.other // Stuur de daadwerkelijke andere naam
+                    course: workshopName, // Assuming "course" is the correct field name for the workshop name
+                    user: pair.user, // Send the actual user name
+                    other: pair.other // Send the actual other name
                 })
             });
 
             if (!response.ok) {
-                throw new Error('Netwerkrespons was niet ok');
+                throw new Error('Network response was not ok');
             }
 
             const data = await response.json();
-            console.log('Gegevens succesvol naar de database verzonden:', data);
+            console.log('Data successfully sent to the database:', data);
 
         } catch (error) {
-            console.error('Fout bij het schrijven naar Baserow:', error);
-            alert('Het opslaan van het koppel is mislukt. Probeer het later opnieuw.');
+            console.error('Error writing to Baserow:', error);
+            alert('Failed to save the pair. Please try again later.');
         }
     }
 
-    // Roep de functies aan om bestaande paren op te halen en vervolgens namen te laden wanneer de pagina wordt geladen
+    // Call the functions to fetch existing pairs and then load names when the page loads
     fetchAndPopulatePairs();
     fetchNames();
 });
