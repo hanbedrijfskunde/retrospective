@@ -89,8 +89,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             // The first click sets the user's name
                             selectedUserName = name;
                             instructionsDiv.innerHTML = `
-                                <p class="font-bold">Great!</p>
-                                <p>Now click on the names of the persons you've interacted with.</p>
+                                <p class="font-bold">Hi ${selectedUserName}!</p>
+                                <p>Click on the names of the persons you've interacted with.</p>
                             `;
                             // Change the color of the first clicked button to 'HotPink'
                             button.style.backgroundColor = 'deeppink';
@@ -181,6 +181,16 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Failed to save the pair. Please try again later.');
         }
     }
+
+    // Event listener for the "Finish" button
+    finishButton.addEventListener('click', function() {
+        // Clear all name buttons
+        nameButtonsContainer.innerHTML = '';
+        instructionsDiv.innerHTML = `
+            <p class="font-bold">Ready!</p>
+            <p>All the names have been recorded.</p>
+        `;
+    });
 
     // Call the functions to fetch existing pairs and then load names when the page loads
     fetchAndPopulatePairs();

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const instructionsDiv = document.getElementById('instructions');
     const nameButtonsContainer = document.getElementById('nameButtonsContainer');
+    const finishButton = document.getElementById('finishButton');
     const networkContainer = document.getElementById('network');
 
     // Haal de workshopnaam op uit de URL-queryparameters
@@ -89,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             // De eerste klik stelt de naam van de gebruiker in
                             selectedUserName = name;
                             instructionsDiv.innerHTML = `
-                                <p class="font-bold">Geweldig!</p>
-                                <p>Klik nu op de namen van de personen waarmee je hebt samengewerkt.</p>
+                                <p class="font-bold">Hallo ${selectedUserName}!</p>
+                                <p>Klik op de namen van de personen waarmee je hebt samengewerkt. Druk daarna op 'Klaar'.</p>
                             `;
                             // Verander de kleur van de eerste aangeklikte knop naar 'HotPink'
                             button.style.backgroundColor = 'deeppink';
@@ -181,6 +182,16 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Het opslaan van het koppel is mislukt. Probeer het later opnieuw.');
         }
     }
+
+    // Event listener for the "Finish" button
+    finishButton.addEventListener('click', function() {
+        // Clear all name buttons
+        nameButtonsContainer.innerHTML = '';
+        instructionsDiv.innerHTML = `
+            <p class="font-bold">Klaar!</p>
+            <p>Alle namen zijn opgeslagen.</p>
+        `;
+    });
 
     // Roep de functies aan om bestaande paren op te halen en vervolgens namen te laden wanneer de pagina wordt geladen
     fetchAndPopulatePairs();
