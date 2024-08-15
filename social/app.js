@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const workshopName = urlParams.get('workshop') || 'Workshop';
 
     // Werk de paginatitel bij met de workshopnaam
-    document.title = `${workshopName} Sociale Grafiek`;
+    document.title = `${workshopName} Netwerk Grafiek`;
 
     // Werk de titel op de pagina bij
-    document.querySelector('h1').textContent = `${workshopName} Sociale Grafiek`;    
+    document.querySelector('h1').textContent = `${workshopName} Netwerk Grafiek`;    
 
     // Vis.js Gegevens
     const nodes = new vis.DataSet([]);
