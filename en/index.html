@@ -31,19 +31,26 @@
             display: block;
             margin-top: 4px;
         }
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-xl mx-auto bg-white shadow-md rounded p-6">
         <h1 class="text-2xl font-bold mb-4">Workshop Retrospective</h1>
-        <form id="feedbackForm" class="mb-6">
+        <form id="feedbackForm" class="mb-6" novalidate>
             <div class="mb-4">
-                <label for="voornaam" class="block font-medium text-gray-700">First name</label>
-                <input type="text" id="voornaam" name="voornaam" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <label for="voornaam" class="block font-medium text-gray-700">First name <span aria-hidden="true" class="text-red-500">*</span></label>
+                <input type="text" id="voornaam" name="voornaam" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" aria-describedby="voornaamHelp">
+                <div id="voornaamHelp" class="sr-only">Enter your first name.</div>
+                <div class="error-message" id="voornaamError">First name is required.</div>
             </div>
 
             <div class="mb-4">
-                <label class="block font-medium text-gray-700">Information</label>
+                <label class="block font-medium text-gray-700">Information <span aria-hidden="true" class="text-red-500">*</span></label>
                 <div class="description italic">How do you assess the value of newly acquired knowledge and skills?</div>
                 <div class="star-rating">
                     <input type="radio" id="informatie5" name="informatie" value="5" required><label for="informatie5">★</label>
@@ -53,10 +60,11 @@
                     <input type="radio" id="informatie1" name="informatie" value="1"><label for="informatie1">★</label>
                     <input type="radio" id="informatie0" name="informatie" value="0" checked required style="display: none;">
                 </div>
+                <div class="error-message" id="informatieError">Information rating is required.</div>
             </div>
 
             <div class="mb-4">
-                <label class="block font-medium text-gray-700">Interaction</label>
+                <label class="block font-medium text-gray-700">Interaction <span aria-hidden="true" class="text-red-500">*</span></label>
                 <div class="description italic">How much opportunity was there to engage with the material independently?</div>
                 <div class="star-rating">                 
                     <input type="radio" id="interactie5" name="interactie" value="5"><label for="interactie5">★</label>
@@ -66,10 +74,11 @@
                     <input type="radio" id="interactie1" name="interactie" value="1"><label for="interactie1">★</label>
                     <input type="radio" id="interactie0" name="interactie" value="0" checked required style="display: none;">  
                 </div>
+                <div class="error-message" id="interactieError">Interaction rating is required.</div>
             </div>
 
             <div class="mb-4">
-                <label class="block font-medium text-gray-700">Inspiration</label>
+                <label class="block font-medium text-gray-700">Inspiration <span aria-hidden="true" class="text-red-500">*</span></label>
                 <div class="description italic">To what extend did the session provide you with new insights and/or ideas?</div>
                 <div class="star-rating">
                     <input type="radio" id="inspiratie5" name="inspiratie" value="5"><label for="inspiratie5">★</label>
@@ -79,6 +88,7 @@
                     <input type="radio" id="inspiratie1" name="inspiratie" value="1"><label for="inspiratie1">★</label>
                     <input type="radio" id="inspiratie0" name="inspiratie" value="0" checked required style="display: none;">
                 </div>                
+                <div class="error-message" id="inspiratieError">Inspiration rating is required.</div>
             </div>
 
             <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Submit</button>
@@ -87,6 +97,64 @@
         <canvas id="feedbackChart" width="400" height="400"></canvas>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('feedbackForm');
+            const voornaamInput = document.getElementById('voornaam');
+            const informatieInputs = document.getElementsByName('informatie');
+            const interactieInputs = document.getElementsByName('interactie');
+            const inspiratieInputs = document.getElementsByName('inspiratie');
+
+            const voornaamError = document.getElementById('voornaamError');
+            const informatieError = document.getElementById('informatieError');
+            const interactieError = document.getElementById('interactieError');
+            const inspiratieError = document.getElementById('inspiratieError');
+
+            function validateInput(input, errorElement) {
+                if (!input.value.trim()) {
+                    errorElement.style.display = 'block';
+                    return false;
+                } else {
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+            }
+
+            function validateRadio(inputs, errorElement) {
+                let isChecked = false;
+                inputs.forEach(input => {
+                    if (input.checked) {
+                        isChecked = true;
+                    }
+                });
+                if (!isChecked) {
+                    errorElement.style.display = 'block';
+                    return false;
+                } else {
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+            }
+
+            voornaamInput.addEventListener('input', () => validateInput(voornaamInput, voornaamError));
+            informatieInputs.forEach(input => input.addEventListener('change', () => validateRadio(informatieInputs, informatieError)));
+            interactieInputs.forEach(input => input.addEventListener('change', () => validateRadio(interactieInputs, interactieError)));
+            inspiratieInputs.forEach(input => input.addEventListener('change', () => validateRadio(inspiratieInputs, inspiratieError)));
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const isVoornaamValid = validateInput(voornaamInput, voornaamError);
+                const isInformatieValid = validateRadio(informatieInputs, informatieError);
+                const isInteractieValid = validateRadio(interactieInputs, interactieError);
+                const isInspiratieValid = validateRadio(inspiratieInputs, inspiratieError);
+
+                if (isVoornaamValid && isInformatieValid && isInteractieValid && isInspiratieValid) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
