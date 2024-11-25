@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Definieer constanten voor de API-URL en token
     const databaseUrl = `https://api.baserow.io/api/database/rows/table/338107/?user_field_names=true&filter__field_2494180__contains=${encodeURIComponent(workshopName)}`;
-    const token = 'mZ33D9oiP9PdxPaMbYRZxogAN2D5qjOo';
+    const token = 'XA09hb4iro9GuCin6x3IRP4dT5SYhqHD';
     const baserowTableUrl = `https://api.baserow.io/api/database/rows/table/338807/?user_field_names=true&filter__field_2499943__contains=${workshopName}`;
 
     let selectedUserName = null;
